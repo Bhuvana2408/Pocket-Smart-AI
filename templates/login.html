@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pocket Smart AI - Login</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+        .login-container {
+            width: 90%;
+            max-width: 400px;
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.12);
+
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 45px;
+        }
+
+        h1 {
+            color: #2563eb;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+
+            padding: 13px;
+
+            margin: 8px 0;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+
+            padding: 13px;
+
+            margin-top: 15px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #message {
+            margin-top: 15px;
+
+            font-weight: bold;
+        }
+
+        .register-link {
+            margin-top: 20px;
+
+            color: #555;
+        }
+
+        .register-link a {
+            color: #2563eb;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-container">
+
+
+    <div class="logo">
+        💰
+    </div>
+
+
+    <h1>
+        Pocket Smart AI
+    </h1>
+
+
+    <p class="subtitle">
+        Smart Budget & AI Financial Assistant
+    </p>
+
+
+    <!-- EMAIL -->
+
+    <input
+        type="text"
+        id="email"
+        placeholder="Email"
+    >
+
+
+    <!-- PASSWORD -->
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Password"
+    >
+
+
+    <!-- LOGIN BUTTON -->
+
+    <button onclick="login()">
+
+        🔐 Login
+
+    </button>
+
+
+    <!-- MESSAGE -->
+
+    <p id="message"></p>
+
+
+    <!-- REGISTER -->
+
+    <div class="register-link">
+
+        Don't have an account?
+
+        <a href="/register-page">
+            Register
+        </a>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+async function login() {
+
+
+    const email =
+        document.getElementById(
+            "email"
+        ).value;
+
+
+    const password =
+        document.getElementById(
+            "password"
+        ).value;
+
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    // Validation
+
+    if (!email || !password) {
+
+        message.innerText =
+            "⚠️ Please enter email and password.";
+
+        message.style.color = "orange";
+
+        return;
+    }
+
+
+    message.innerText =
+        "🔄 Logging in...";
+
+    message.style.color = "#2563eb";
+
+
+    try {
+
+
+        const response = await fetch(
+
+            `/auth/login?email=${encodeURIComponent(email)}` +
+            `&password=${encodeURIComponent(password)}`,
+
+            {
+                method: "POST"
+            }
+
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.status === "success") {
+
+
+            message.innerText =
+                "✅ Login successful!";
+
+            message.style.color =
+                "green";
+
+
+            // Store user details
+
+            localStorage.setItem(
+                "user_id",
+                data.user.id
+            );
+
+
+            localStorage.setItem(
+                "user_name",
+                data.user.name
+            );
+
+
+            localStorage.setItem(
+                "user_email",
+                data.user.email
+            );
+
+
+            // Open dashboard
+
+            setTimeout(function() {
+
+                window.location.href =
+                    "/dashboard-page";
+
+            }, 800);
+
+
+        }
+
+        else {
+
+
+            message.innerText =
+                "❌ " + data.message;
+
+            message.style.color =
+                "red";
+
+        }
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(error);
+
+
+        message.innerText =
+            "❌ Unable to connect to server.";
+
+        message.style.color =
+            "red";
+
+    }
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

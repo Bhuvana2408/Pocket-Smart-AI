@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pocket Smart AI - Register</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+        .register-container {
+            width: 90%;
+            max-width: 400px;
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.12);
+
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 45px;
+        }
+
+        h1 {
+            color: #2563eb;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+
+            padding: 13px;
+
+            margin: 8px 0;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+
+            padding: 13px;
+
+            margin-top: 15px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .login-link {
+            margin-top: 20px;
+            color: #555;
+        }
+
+        .login-link a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="register-container">
+
+
+    <div class="logo">
+        💰
+    </div>
+
+
+    <h1>
+        Pocket Smart AI
+    </h1>
+
+
+    <p class="subtitle">
+        Create Your Account
+    </p>
+
+
+    <!-- NAME -->
+
+    <input
+        type="text"
+        id="name"
+        placeholder="Enter your name"
+    >
+
+
+    <!-- EMAIL -->
+
+    <input
+        type="text"
+        id="email"
+        placeholder="Enter your email"
+    >
+
+
+    <!-- PASSWORD -->
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Enter password"
+    >
+
+
+    <!-- REGISTER BUTTON -->
+
+    <button onclick="registerUser()">
+
+        📝 Create Account
+
+    </button>
+
+
+    <!-- MESSAGE -->
+
+    <p id="message"></p>
+
+
+    <!-- LOGIN -->
+
+    <div class="login-link">
+
+        Already have an account?
+
+        <a href="/login-page">
+            Login
+        </a>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+async function registerUser() {
+
+
+    const name =
+        document.getElementById(
+            "name"
+        ).value;
+
+
+    const email =
+        document.getElementById(
+            "email"
+        ).value;
+
+
+    const password =
+        document.getElementById(
+            "password"
+        ).value;
+
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    // Validation
+
+    if (!name || !email || !password) {
+
+        message.innerText =
+            "⚠️ Please fill all fields.";
+
+        message.style.color = "orange";
+
+        return;
+
+    }
+
+
+    message.innerText =
+        "🔄 Creating account...";
+
+    message.style.color =
+        "#2563eb";
+
+
+    try {
+
+
+        const url =
+            `/auth/register` +
+            `?name=${encodeURIComponent(name)}` +
+            `&email=${encodeURIComponent(email)}` +
+            `&password=${encodeURIComponent(password)}`;
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method: "POST"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.status === "success") {
+
+
+            message.innerText =
+                "✅ Account created successfully!";
+
+            message.style.color =
+                "green";
+
+
+            setTimeout(function() {
+
+                window.location.href =
+                    "/login-page";
+
+            }, 1000);
+
+
+        }
+
+        else {
+
+
+            message.innerText =
+                "❌ " + data.message;
+
+            message.style.color =
+                "red";
+
+        }
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(error);
+
+
+        message.innerText =
+            "❌ Unable to connect to server.";
+
+        message.style.color =
+            "red";
+
+    }
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

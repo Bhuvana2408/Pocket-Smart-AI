@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Recommendations - Pocket Smart AI</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+
+            background: linear-gradient(
+                135deg,
+                #4f46e5,
+                #7c3aed
+            );
+
+            color: white;
+
+            padding: 20px 40px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.1);
+        }
+
+
+        .logo {
+
+            font-size: 24px;
+
+            font-weight: bold;
+        }
+
+
+        .user-area {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+        }
+
+
+        .logout-btn {
+
+            border: none;
+
+            padding: 9px 16px;
+
+            border-radius: 8px;
+
+            background: white;
+
+            color: #4f46e5;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        .logout-btn:hover {
+
+            background: #eef2ff;
+        }
+
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        .nav {
+
+            background: white;
+
+            padding: 15px 40px;
+
+            display: flex;
+
+            gap: 12px;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            flex-wrap: wrap;
+        }
+
+
+        .nav button {
+
+            border: none;
+
+            padding: 10px 18px;
+
+            border-radius: 8px;
+
+            background: #eef2ff;
+
+            color: #4338ca;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+
+        .nav button:hover {
+
+            background: #ddd6fe;
+        }
+
+
+        /* AI HISTORY BUTTON */
+
+        .history-btn {
+
+            background: #ede9fe !important;
+
+            color: #6d28d9 !important;
+        }
+
+
+        .history-btn:hover {
+
+            background: #ddd6fe !important;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .container {
+
+            max-width: 1100px;
+
+            margin: 35px auto;
+
+            padding: 0 20px;
+        }
+
+
+        .welcome {
+
+            margin-bottom: 25px;
+        }
+
+
+        .welcome h1 {
+
+            font-size: 30px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .welcome p {
+
+            color: #6b7280;
+        }
+
+
+        /* =========================
+           AI CARD
+        ========================= */
+
+        .ai-card {
+
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.08);
+
+            margin-bottom: 25px;
+        }
+
+
+        .ai-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .ai-icon {
+
+            width: 50px;
+
+            height: 50px;
+
+            background: #ede9fe;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 26px;
+        }
+
+
+        .ai-title h2 {
+
+            color: #4f46e5;
+        }
+
+
+        .ai-card p {
+
+            color: #6b7280;
+
+            line-height: 1.6;
+
+            margin-bottom: 20px;
+        }
+
+
+        .analyze-btn {
+
+            width: 100%;
+
+            border: none;
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        .analyze-btn:hover {
+
+            opacity: 0.9;
+        }
+
+
+        .analyze-btn:disabled {
+
+            background: #9ca3af;
+
+            cursor: not-allowed;
+        }
+
+
+        /* =========================
+           SUMMARY
+        ========================= */
+
+        .summary-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .summary-card {
+
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 18px rgba(0,0,0,0.06);
+        }
+
+
+        .summary-card h3 {
+
+            color: #6b7280;
+
+            font-size: 14px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .summary-card .value {
+
+            font-size: 25px;
+
+            font-weight: bold;
+
+            color: #111827;
+        }
+
+
+        /* =========================
+           RESULT
+        ========================= */
+
+        .result-card {
+
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.08);
+        }
+
+
+        .result-card h2 {
+
+            color: #4f46e5;
+
+            margin-bottom: 20px;
+        }
+
+
+        #loading {
+
+            display: none;
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #6b7280;
+        }
+
+
+        .spinner {
+
+            width: 35px;
+
+            height: 35px;
+
+            border: 4px solid #ddd6fe;
+
+            border-top:
+                4px solid #4f46e5;
+
+            border-radius: 50%;
+
+            animation:
+                spin 1s linear infinite;
+
+            margin:
+                0 auto 12px;
+        }
+
+
+        @keyframes spin {
+
+            100% {
+
+                transform:
+                    rotate(360deg);
+            }
+        }
+
+
+        #result {
+
+            line-height: 1.8;
+
+            color: #374151;
+        }
+
+
+        .success-box {
+
+            background: #f0fdf4;
+
+            border-left:
+                5px solid #22c55e;
+
+            padding: 20px;
+
+            border-radius: 10px;
+        }
+
+
+        .error-box {
+
+            background: #fef2f2;
+
+            border-left:
+                5px solid #ef4444;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            color: #991b1b;
+        }
+
+
+        .warning-box {
+
+            background: #fffbeb;
+
+            border-left:
+                5px solid #f59e0b;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            color: #92400e;
+        }
+
+
+        .demo-box {
+
+            background: #eff6ff;
+
+            border-left:
+                5px solid #3b82f6;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            color: #1e40af;
+
+            margin-bottom: 15px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+            text-align: center;
+
+            color: #6b7280;
+
+            padding: 30px;
+
+            margin-top: 30px;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .header {
+
+                padding: 18px 20px;
+            }
+
+
+            .nav {
+
+                padding:
+                    12px 20px;
+            }
+
+
+            .summary-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .container {
+
+                margin-top: 25px;
+            }
+
+
+            .welcome h1 {
+
+                font-size: 24px;
+            }
+
+
+            .user-area {
+
+                gap: 8px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="header">
+
+        <div class="logo">
+
+            🤖 Pocket Smart AI
+
+        </div>
+
+
+        <div class="user-area">
+
+            <span id="userName">
+                User
+            </span>
+
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         NAVIGATION
+    ========================= -->
+
+    <div class="nav">
+
+
+        <button
+            onclick="goDashboard()">
+
+            🏠 Dashboard
+
+        </button>
+
+
+        <button
+            onclick="goExpenses()">
+
+            💰 Expenses
+
+        </button>
+
+
+        <button
+            onclick="goBudget()">
+
+            📊 Budget
+
+        </button>
+
+
+        <button
+            onclick="loadRecommendations()">
+
+            🤖 AI Analysis
+
+        </button>
+
+
+        <!-- AI HISTORY -->
+
+        <button
+            class="history-btn"
+            onclick="goAIHistory()">
+
+            📜 AI History
+
+        </button>
+
+
+        <button
+            onclick="goReports()">
+
+            📈 Reports
+
+        </button>
+
+
+        <button
+            onclick="goHistory()">
+
+            🧾 History
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <div class="container">
+
+
+        <!-- WELCOME -->
+
+        <div class="welcome">
+
+            <h1>
+                🤖 AI Financial Assistant
+            </h1>
+
+            <p>
+                Get AI-powered insights and
+                suggestions based on your spending.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             AI CARD
+        ========================= -->
+
+        <div class="ai-card">
+
+
+            <div class="ai-title">
+
+                <div class="ai-icon">
+
+                    🤖
+
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Smart AI Recommendations
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <p>
+
+                Pocket Smart AI analyzes your
+                budget and expenses using
+                Gemini AI and provides simple
+                financial suggestions.
+
+            </p>
+
+
+            <button
+                id="analyzeBtn"
+                class="analyze-btn"
+                onclick="loadRecommendations()">
+
+                ✨ Analyze My Spending
+
+            </button>
+
+
+        </div>
+
+
+        <!-- =========================
+             SUMMARY
+        ========================= -->
+
+        <div class="summary-grid">
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Budget
+                </h3>
+
+
+                <div
+                    class="value"
+                    id="totalBudget">
+
+                    ₹0
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Expenses
+                </h3>
+
+
+                <div
+                    class="value"
+                    id="totalExpenses">
+
+                    ₹0
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Remaining Budget
+                </h3>
+
+
+                <div
+                    class="value"
+                    id="remainingBudget">
+
+                    ₹0
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             AI RESULT
+        ========================= -->
+
+        <div class="result-card">
+
+
+            <h2>
+                💡 AI Recommendation
+            </h2>
+
+
+            <!-- LOADING -->
+
+            <div id="loading">
+
+
+                <div class="spinner">
+                </div>
+
+
+                <p>
+                    Gemini AI is analyzing
+                    your spending...
+                </p>
+
+
+            </div>
+
+
+            <!-- RESULT -->
+
+            <div id="result">
+
+                Click
+                <b>
+                    "Analyze My Spending"
+                </b>
+
+                to get your AI-powered
+                financial recommendations.
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <div class="footer">
+
+        <p>
+
+            © 2026 Pocket Smart AI |
+            Smart Budget & AI Assistant
+
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+
+        // ========================================
+        // GET LOGGED-IN USER
+        // ========================================
+
+        const userId =
+            localStorage.getItem("user_id");
+
+
+        const userName =
+            localStorage.getItem("user_name");
+
+
+        // ========================================
+        // CHECK LOGIN
+        // ========================================
+
+        if (!userId) {
+
+            window.location.href =
+                "/login-page";
+
+        }
+
+
+        // ========================================
+        // SHOW USER NAME
+        // ========================================
+
+        if (userName) {
+
+            document
+                .getElementById("userName")
+                .textContent = userName;
+
+        }
+
+
+        // ========================================
+        // DASHBOARD
+        // ========================================
+
+        function goDashboard() {
+
+            window.location.href =
+                "/dashboard-page";
+
+        }
+
+
+        // ========================================
+        // EXPENSES
+        // ========================================
+
+        function goExpenses() {
+
+            window.location.href =
+                "/expenses-page";
+
+        }
+
+
+        // ========================================
+        // BUDGET
+        // ========================================
+
+        function goBudget() {
+
+            window.location.href =
+                "/budget-page";
+
+        }
+
+
+        // ========================================
+        // REPORTS
+        // ========================================
+
+        function goReports() {
+
+            window.location.href =
+                "/reports-page";
+
+        }
+
+
+        // ========================================
+        // TRANSACTION HISTORY
+        // ========================================
+
+        function goHistory() {
+
+            window.location.href =
+                "/history-page";
+
+        }
+
+
+        // ========================================
+        // AI HISTORY
+        // ========================================
+
+        function goAIHistory() {
+
+            window.location.href =
+                "/ai-history-page";
+
+        }
+
+
+        // ========================================
+        // LOGOUT
+        // ========================================
+
+        function logout() {
+
+            localStorage.removeItem(
+                "user_id"
+            );
+
+            localStorage.removeItem(
+                "user_name"
+            );
+
+            localStorage.removeItem(
+                "user_email"
+            );
+
+
+            window.location.href =
+                "/login-page";
+
+        }
+
+
+        // ========================================
+        // LOAD AI RECOMMENDATIONS
+        // ========================================
+
+        async function loadRecommendations() {
+
+
+            const button =
+                document.getElementById(
+                    "analyzeBtn"
+                );
+
+
+            const loading =
+                document.getElementById(
+                    "loading"
+                );
+
+
+            const result =
+                document.getElementById(
+                    "result"
+                );
+
+
+            // Disable button
+
+            button.disabled = true;
+
+            button.textContent =
+                "🤖 Analyzing...";
+
+
+            // Show loading
+
+            loading.style.display =
+                "block";
+
+
+            result.innerHTML = "";
+
+
+            try {
+
+
+                // =================================
+                // CALL API
+                // =================================
+
+                const response =
+                    await fetch(
+                        `/recommendations/${userId}`
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                // Hide loading
+
+                loading.style.display =
+                    "none";
+
+
+                // =================================
+                // UPDATE SUMMARY
+                // =================================
+
+                if (
+                    data.total_budget !==
+                    undefined
+                ) {
+
+                    document
+                        .getElementById(
+                            "totalBudget"
+                        )
+                        .textContent =
+                        "₹" +
+                        Number(
+                            data.total_budget
+                        ).toLocaleString(
+                            "en-IN"
+                        );
+
+                }
+
+
+                if (
+                    data.total_expenses !==
+                    undefined
+                ) {
+
+                    document
+                        .getElementById(
+                            "totalExpenses"
+                        )
+                        .textContent =
+                        "₹" +
+                        Number(
+                            data.total_expenses
+                        ).toLocaleString(
+                            "en-IN"
+                        );
+
+                }
+
+
+                if (
+                    data.remaining_budget !==
+                    undefined
+                ) {
+
+                    document
+                        .getElementById(
+                            "remainingBudget"
+                        )
+                        .textContent =
+                        "₹" +
+                        Number(
+                            data.remaining_budget
+                        ).toLocaleString(
+                            "en-IN"
+                        );
+
+                }
+
+
+                // =================================
+                // SUCCESS / DEMO SUCCESS
+                // =================================
+
+                if (
+                    data.status ===
+                    "success"
+                ) {
+
+
+                    // Demo mode
+
+                    if (
+                        data.mode ===
+                        "demo"
+                    ) {
+
+                        result.innerHTML = `
+
+                            <div class="demo-box">
+
+                                <strong>
+                                    ⚠️ Demo AI Recommendation
+                                </strong>
+
+                                <br><br>
+
+                                Gemini API quota is
+                                currently unavailable.
+
+                                <br>
+
+                                This recommendation
+                                is generated using
+                                Pocket Smart AI's
+                                demo fallback.
+
+                            </div>
+
+
+                            <div class="success-box">
+
+                                ${formatAIText(
+                                    data.ai_recommendation
+                                )}
+
+                            </div>
+
+                        `;
+
+                    }
+
+
+                    // Real Gemini mode
+
+                    else {
+
+                        result.innerHTML = `
+
+                            <div class="success-box">
+
+                                <strong>
+                                    ✅ AI Analysis Completed
+                                </strong>
+
+                                <br><br>
+
+                                ${formatAIText(
+                                    data.ai_recommendation
+                                )}
+
+                            </div>
+
+                        `;
+
+                    }
+
+                }
+
+
+                // =================================
+                // QUOTA ERROR
+                // =================================
+
+                else if (
+
+                    data.message &&
+
+                    data.message.includes(
+                        "Gemini daily quota exceeded"
+                    )
+
+                ) {
+
+
+                    result.innerHTML = `
+
+                        <div class="warning-box">
+
+                            <strong>
+                                ⚠️ Gemini daily quota exceeded.
+                            </strong>
+
+                            <br><br>
+
+                            Please try again after
+                            the quota resets.
+
+                        </div>
+
+                    `;
+
+                }
+
+
+                // =================================
+                // GENERAL ERROR
+                // =================================
+
+                else {
+
+
+                    result.innerHTML = `
+
+                        <div class="error-box">
+
+                            <strong>
+                                ❌ AI Error
+                            </strong>
+
+                            <br><br>
+
+                            ${
+                                data.message ||
+                                "Something went wrong."
+                            }
+
+                        </div>
+
+                    `;
+
+                }
+
+
+            }
+
+
+            catch (error) {
+
+
+                // Hide loading
+
+                loading.style.display =
+                    "none";
+
+
+                console.error(
+                    "AI Error:",
+                    error
+                );
+
+
+                result.innerHTML = `
+
+                    <div class="error-box">
+
+                        <strong>
+                            ❌ Connection Error
+                        </strong>
+
+                        <br><br>
+
+                        Could not connect
+                        to the AI server.
+
+                        <br><br>
+
+                        Please make sure
+                        FastAPI is running.
+
+                    </div>
+
+                `;
+
+            }
+
+
+            // =================================
+            // ENABLE BUTTON
+            // =================================
+
+            button.disabled = false;
+
+            button.textContent =
+                "✨ Analyze My Spending";
+
+        }
+
+
+        // ========================================
+        // FORMAT AI RESPONSE
+        // ========================================
+
+        function formatAIText(text) {
+
+
+            if (!text) {
+
+                return "No recommendation received.";
+
+            }
+
+
+            let formatted =
+                String(text);
+
+
+            // Escape HTML
+
+            formatted =
+                formatted
+                    .replace(
+                        /&/g,
+                        "&amp;"
+                    )
+                    .replace(
+                        /</g,
+                        "&lt;"
+                    )
+                    .replace(
+                        />/g,
+                        "&gt;"
+                    );
+
+
+            // Bold markdown
+
+            formatted =
+                formatted.replace(
+                    /\*\*(.*?)\*\*/g,
+                    "<strong>$1</strong>"
+                );
+
+
+            // Convert headings
+
+            formatted =
+                formatted.replace(
+                    /^### (.*)$/gm,
+                    "<h3>$1</h3>"
+                );
+
+
+            formatted =
+                formatted.replace(
+                    /^## (.*)$/gm,
+                    "<h3>$1</h3>"
+                );
+
+
+            formatted =
+                formatted.replace(
+                    /^# (.*)$/gm,
+                    "<h3>$1</h3>"
+                );
+
+
+            // Convert line breaks
+
+            formatted =
+                formatted.replace(
+                    /\n/g,
+                    "<br>"
+                );
+
+
+            return formatted;
+
+        }
+
+    </script>
+
+</body>
+
+</html>

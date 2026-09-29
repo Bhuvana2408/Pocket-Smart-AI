@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Reports - Pocket Smart AI</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 20px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            border: none;
+            padding: 9px 16px;
+            border-radius: 8px;
+
+            background: white;
+            color: #4f46e5;
+
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .nav {
+            background: white;
+            padding: 15px 40px;
+
+            display: flex;
+            gap: 12px;
+
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .nav button {
+            border: none;
+            padding: 10px 18px;
+
+            border-radius: 8px;
+
+            background: #eef2ff;
+            color: #4338ca;
+
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .title {
+            margin-bottom: 25px;
+        }
+
+        .title h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .title p {
+            color: #6b7280;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 22px;
+
+            border-radius: 15px;
+
+            box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+        }
+
+        .summary-card h3 {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .summary-card .value {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 25px;
+
+            border-radius: 16px;
+
+            box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+        }
+
+        .chart-card h2 {
+            color: #4f46e5;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .chart-box {
+            height: 350px;
+            position: relative;
+        }
+
+        .full-card {
+            margin-top: 25px;
+        }
+
+        .analysis {
+            line-height: 1.8;
+            color: #374151;
+        }
+
+        .analysis-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .refresh-btn {
+            margin-top: 20px;
+
+            border: none;
+            padding: 12px 20px;
+
+            border-radius: 8px;
+
+            background: #4f46e5;
+            color: white;
+
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @media (max-width: 800px) {
+
+            .summary-grid,
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 18px 20px;
+            }
+
+            .nav {
+                padding: 12px 20px;
+                flex-wrap: wrap;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="logo">
+            📊 Pocket Smart AI
+        </div>
+
+        <div class="user-area">
+
+            <span id="userName">
+                User
+            </span>
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="nav">
+
+        <button onclick="goDashboard()">
+            🏠 Dashboard
+        </button>
+
+        <button onclick="goExpenses()">
+            💰 Expenses
+        </button>
+
+        <button onclick="goBudget()">
+            📊 Budget
+        </button>
+
+        <button onclick="goAI()">
+            🤖 AI
+        </button>
+
+    </div>
+
+
+    <!-- MAIN -->
+
+    <div class="container">
+
+
+        <div class="title">
+
+            <h1>
+                📊 Spending Reports
+            </h1>
+
+            <p>
+                Analyze your budget and spending patterns.
+            </p>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="summary-grid">
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Budget
+                </h3>
+
+                <div
+                    class="value"
+                    id="totalBudget">
+
+                    ₹0
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Expenses
+                </h3>
+
+                <div
+                    class="value"
+                    id="totalExpenses">
+
+                    ₹0
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Remaining Budget
+                </h3>
+
+                <div
+                    class="value"
+                    id="remainingBudget">
+
+                    ₹0
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- CHARTS -->
+
+        <div class="charts-grid">
+
+
+            <!-- EXPENSE CATEGORY -->
+
+            <div class="chart-card">
+
+                <h2>
+                    💰 Expenses by Category
+                </h2>
+
+                <div class="chart-box">
+
+                    <canvas
+                        id="expenseChart">
+                    </canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- BUDGET CATEGORY -->
+
+            <div class="chart-card">
+
+                <h2>
+                    📊 Budget by Category
+                </h2>
+
+                <div class="chart-box">
+
+                    <canvas
+                        id="budgetChart">
+                    </canvas>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- BUDGET VS EXPENSE -->
+
+        <div class="chart-card full-card">
+
+            <h2>
+                📈 Budget vs Expenses
+            </h2>
+
+            <div class="chart-box">
+
+                <canvas
+                    id="comparisonChart">
+                </canvas>
+
+            </div>
+
+        </div>
+
+
+        <!-- ANALYSIS -->
+
+        <div class="chart-card full-card">
+
+            <h2>
+                💡 Spending Analysis
+            </h2>
+
+            <div
+                class="analysis"
+                id="analysis">
+
+                Loading analysis...
+
+            </div>
+
+
+            <button
+                class="refresh-btn"
+                onclick="loadReports()">
+
+                🔄 Refresh Reports
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+
+        // =========================
+        // USER
+        // =========================
+
+        const userId =
+            localStorage.getItem("user_id");
+
+        const userName =
+            localStorage.getItem("user_name");
+
+
+        if (!userId) {
+
+            window.location.href =
+                "/login-page";
+
+        }
+
+
+        if (userName) {
+
+            document.getElementById(
+                "userName"
+            ).textContent = userName;
+
+        }
+
+
+        // =========================
+        // NAVIGATION
+        // =========================
+
+        function goDashboard() {
+
+            window.location.href =
+                "/dashboard-page";
+
+        }
+
+
+        function goExpenses() {
+
+            window.location.href =
+                "/expenses-page";
+
+        }
+
+
+        function goBudget() {
+
+            window.location.href =
+                "/budget-page";
+
+        }
+
+
+        function goAI() {
+
+            window.location.href =
+                "/ai-page";
+
+        }
+
+
+        // =========================
+        // LOGOUT
+        // =========================
+
+        function logout() {
+
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_name");
+            localStorage.removeItem("user_email");
+
+            window.location.href =
+                "/login-page";
+
+        }
+
+
+        // =========================
+        // CHART VARIABLES
+        // =========================
+
+        let expenseChart;
+        let budgetChart;
+        let comparisonChart;
+
+
+        // =========================
+        // LOAD REPORTS
+        // =========================
+
+        async function loadReports() {
+
+            try {
+
+
+                // GET EXPENSES
+
+                const expenseResponse =
+                    await fetch(
+                        `/expenses/user/${userId}`
+                    );
+
+
+                const expenseData =
+                    await expenseResponse.json();
+
+
+                // GET BUDGETS
+
+                const budgetResponse =
+                    await fetch(
+                        `/budget/user/${userId}`
+                    );
+
+
+                const budgetData =
+                    await budgetResponse.json();
+
+
+                const expenses =
+                    expenseData.expenses || [];
+
+
+                const budgets =
+                    budgetData.budgets || [];
+
+
+                // =========================
+                // TOTALS
+                // =========================
+
+                let totalExpenses = 0;
+                let totalBudget = 0;
+
+
+                expenses.forEach(expense => {
+
+                    totalExpenses +=
+                        Number(expense.amount);
+
+                });
+
+
+                budgets.forEach(budget => {
+
+                    totalBudget +=
+                        Number(budget.amount);
+
+                });
+
+
+                const remaining =
+                    totalBudget -
+                    totalExpenses;
+
+
+                document.getElementById(
+                    "totalBudget"
+                ).textContent =
+                    "₹" +
+                    totalBudget.toLocaleString("en-IN");
+
+
+                document.getElementById(
+                    "totalExpenses"
+                ).textContent =
+                    "₹" +
+                    totalExpenses.toLocaleString("en-IN");
+
+
+                document.getElementById(
+                    "remainingBudget"
+                ).textContent =
+                    "₹" +
+                    remaining.toLocaleString("en-IN");
+
+
+                // =========================
+                // EXPENSE CATEGORIES
+                // =========================
+
+                const expenseCategories = {};
+
+
+                expenses.forEach(expense => {
+
+                    const category =
+                        expense.category || "Other";
+
+
+                    if (!expenseCategories[category]) {
+
+                        expenseCategories[category] = 0;
+
+                    }
+
+
+                    expenseCategories[category] +=
+                        Number(expense.amount);
+
+                });
+
+
+                // =========================
+                // BUDGET CATEGORIES
+                // =========================
+
+                const budgetCategories = {};
+
+
+                budgets.forEach(budget => {
+
+                    const category =
+                        budget.category || "Other";
+
+
+                    if (!budgetCategories[category]) {
+
+                        budgetCategories[category] = 0;
+
+                    }
+
+
+                    budgetCategories[category] +=
+                        Number(budget.amount);
+
+                });
+
+
+                // =========================
+                // EXPENSE CHART
+                // =========================
+
+                if (expenseChart) {
+
+                    expenseChart.destroy();
+
+                }
+
+
+                expenseChart =
+                    new Chart(
+
+                        document.getElementById(
+                            "expenseChart"
+                        ),
+
+                        {
+
+                            type: "doughnut",
+
+                            data: {
+
+                                labels:
+                                    Object.keys(
+                                        expenseCategories
+                                    ),
+
+                                datasets: [{
+
+                                    data:
+                                        Object.values(
+                                            expenseCategories
+                                        )
+
+                                }]
+
+                            },
+
+                            options: {
+
+                                responsive: true,
+
+                                maintainAspectRatio: false
+
+                            }
+
+                        }
+
+                    );
+
+
+                // =========================
+                // BUDGET CHART
+                // =========================
+
+                if (budgetChart) {
+
+                    budgetChart.destroy();
+
+                }
+
+
+                budgetChart =
+                    new Chart(
+
+                        document.getElementById(
+                            "budgetChart"
+                        ),
+
+                        {
+
+                            type: "bar",
+
+                            data: {
+
+                                labels:
+                                    Object.keys(
+                                        budgetCategories
+                                    ),
+
+                                datasets: [{
+
+                                    label:
+                                        "Budget",
+
+                                    data:
+                                        Object.values(
+                                            budgetCategories
+                                        )
+
+                                }]
+
+                            },
+
+                            options: {
+
+                                responsive: true,
+
+                                maintainAspectRatio: false,
+
+                                scales: {
+
+                                    y: {
+
+                                        beginAtZero: true
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    );
+
+
+                // =========================
+                // COMPARISON CHART
+                // =========================
+
+                if (comparisonChart) {
+
+                    comparisonChart.destroy();
+
+                }
+
+
+                comparisonChart =
+                    new Chart(
+
+                        document.getElementById(
+                            "comparisonChart"
+                        ),
+
+                        {
+
+                            type: "bar",
+
+                            data: {
+
+                                labels: [
+                                    "Budget",
+                                    "Expenses",
+                                    "Remaining"
+                                ],
+
+                                datasets: [{
+
+                                    label:
+                                        "Amount",
+
+                                    data: [
+                                        totalBudget,
+                                        totalExpenses,
+                                        remaining
+                                    ]
+
+                                }]
+
+                            },
+
+                            options: {
+
+                                responsive: true,
+
+                                maintainAspectRatio: false,
+
+                                scales: {
+
+                                    y: {
+
+                                        beginAtZero: true
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    );
+
+
+                // =========================
+                // TEXT ANALYSIS
+                // =========================
+
+                let highestCategory =
+                    "None";
+
+
+                let highestAmount = 0;
+
+
+                Object.entries(
+                    expenseCategories
+                ).forEach(
+                    ([category, amount]) => {
+
+                        if (
+                            amount >
+                            highestAmount
+                        ) {
+
+                            highestAmount =
+                                amount;
+
+                            highestCategory =
+                                category;
+
+                        }
+
+                    }
+                );
+
+
+                let analysisHTML = "";
+
+
+                analysisHTML += `
+
+                    <div class="analysis-item">
+
+                        💰 Total spending:
+                        <strong>
+                            ₹${totalExpenses.toLocaleString("en-IN")}
+                        </strong>
+
+                    </div>
+
+                `;
+
+
+                analysisHTML += `
+
+                    <div class="analysis-item">
+
+                        📊 Total budget:
+                        <strong>
+                            ₹${totalBudget.toLocaleString("en-IN")}
+                        </strong>
+
+                    </div>
+
+                `;
+
+
+                analysisHTML += `
+
+                    <div class="analysis-item">
+
+                        💡 Highest spending category:
+                        <strong>
+                            ${highestCategory}
+                        </strong>
+
+                        -
+                        ₹${highestAmount.toLocaleString("en-IN")}
+
+                    </div>
+
+                `;
+
+
+                analysisHTML += `
+
+                    <div class="analysis-item">
+
+                        💵 Remaining budget:
+                        <strong>
+                            ₹${remaining.toLocaleString("en-IN")}
+                        </strong>
+
+                    </div>
+
+                `;
+
+
+                if (remaining < 0) {
+
+                    analysisHTML += `
+
+                        <div class="analysis-item">
+
+                            ⚠️ Your expenses are higher
+                            than your total budget.
+
+                        </div>
+
+                    `;
+
+                }
+
+                else if (remaining === 0) {
+
+                    analysisHTML += `
+
+                        <div class="analysis-item">
+
+                            ⚠️ Your entire budget
+                            has been used.
+
+                        </div>
+
+                    `;
+
+                }
+
+                else {
+
+                    analysisHTML += `
+
+                        <div class="analysis-item">
+
+                            ✅ You still have budget
+                            remaining.
+
+                        </div>
+
+                    `;
+
+                }
+
+
+                document.getElementById(
+                    "analysis"
+                ).innerHTML =
+                    analysisHTML;
+
+
+            }
+
+            catch (error) {
+
+                document.getElementById(
+                    "analysis"
+                ).innerHTML = `
+
+                    <div class="analysis-item">
+
+                        ❌ Unable to load reports.
+
+                        Please make sure the
+                        FastAPI server is running.
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+        // =========================
+        // INITIAL LOAD
+        // =========================
+
+        loadReports();
+
+
+    </script>
+
+</body>
+
+</html>

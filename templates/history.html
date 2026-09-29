@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>History - Pocket Smart AI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 20px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            border: none;
+            padding: 9px 16px;
+            border-radius: 8px;
+
+            background: white;
+            color: #4f46e5;
+
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .nav {
+            background: white;
+            padding: 15px 40px;
+
+            display: flex;
+            gap: 12px;
+
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .nav button {
+            border: none;
+            padding: 10px 18px;
+
+            border-radius: 8px;
+
+            background: #eef2ff;
+            color: #4338ca;
+
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .title {
+            margin-bottom: 25px;
+        }
+
+        .title h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .title p {
+            color: #6b7280;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+
+            border-radius: 16px;
+
+            box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            color: #4f46e5;
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+
+            border-radius: 14px;
+
+            box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+        }
+
+        .summary-card h3 {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .summary-card .value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #eef2ff;
+            color: #4338ca;
+            padding: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .expense-badge {
+            background: #fee2e2;
+            color: #991b1b;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .budget-badge {
+            background: #dcfce7;
+            color: #166534;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .amount-expense {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .amount-budget {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #6b7280;
+        }
+
+        @media (max-width: 700px) {
+
+            .header {
+                padding: 18px 20px;
+            }
+
+            .nav {
+                padding: 12px 20px;
+                flex-wrap: wrap;
+            }
+
+            .filters,
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .title h1 {
+                font-size: 24px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="logo">
+            📋 Pocket Smart AI
+        </div>
+
+        <div class="user-area">
+
+            <span id="userName">
+                User
+            </span>
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="nav">
+
+        <button onclick="goDashboard()">
+            🏠 Dashboard
+        </button>
+
+        <button onclick="goExpenses()">
+            💰 Expenses
+        </button>
+
+        <button onclick="goBudget()">
+            📊 Budget
+        </button>
+
+        <button onclick="goReports()">
+            📈 Reports
+        </button>
+
+        <button onclick="goAI()">
+            🤖 AI
+        </button>
+
+    </div>
+
+
+    <div class="container">
+
+
+        <!-- TITLE -->
+
+        <div class="title">
+
+            <h1>
+                📋 Transaction History
+            </h1>
+
+            <p>
+                View your expenses and budgets in one place.
+            </p>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="summary">
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Transactions
+                </h3>
+
+                <div
+                    class="value"
+                    id="totalTransactions">
+
+                    0
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Expenses
+                </h3>
+
+                <div
+                    class="value"
+                    id="totalExpenses">
+
+                    ₹0
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Budgets
+                </h3>
+
+                <div
+                    class="value"
+                    id="totalBudgets">
+
+                    ₹0
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- FILTER -->
+
+        <div class="card">
+
+            <h2>
+                🔍 Search & Filter
+            </h2>
+
+            <div class="filters">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search category or description..."
+                    oninput="filterHistory()"
+                >
+
+
+                <select
+                    id="typeFilter"
+                    onchange="filterHistory()">
+
+                    <option value="all">
+                        All Transactions
+                    </option>
+
+                    <option value="expense">
+                        Expenses
+                    </option>
+
+                    <option value="budget">
+                        Budgets
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- HISTORY -->
+
+        <div class="card">
+
+            <h2>
+                📋 Transaction History
+            </h2>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Type</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Date</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="historyTable">
+
+                        <tr>
+
+                            <td
+                                colspan="5"
+                                class="empty">
+
+                                Loading history...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+
+        // =========================
+        // USER
+        // =========================
+
+        const userId =
+            localStorage.getItem("user_id");
+
+        const userName =
+            localStorage.getItem("user_name");
+
+
+        let allTransactions = [];
+
+
+        if (!userId) {
+
+            window.location.href =
+                "/login-page";
+
+        }
+
+
+        if (userName) {
+
+            document.getElementById(
+                "userName"
+            ).textContent = userName;
+
+        }
+
+
+        // =========================
+        // NAVIGATION
+        // =========================
+
+        function goDashboard() {
+
+            window.location.href =
+                "/dashboard-page";
+
+        }
+
+
+        function goExpenses() {
+
+            window.location.href =
+                "/expenses-page";
+
+        }
+
+
+        function goBudget() {
+
+            window.location.href =
+                "/budget-page";
+
+        }
+
+
+        function goReports() {
+
+            window.location.href =
+                "/reports-page";
+
+        }
+
+
+        function goAI() {
+
+            window.location.href =
+                "/ai-page";
+
+        }
+
+
+        // =========================
+        // LOGOUT
+        // =========================
+
+        function logout() {
+
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_name");
+            localStorage.removeItem("user_email");
+
+            window.location.href =
+                "/login-page";
+
+        }
+
+
+        // =========================
+        // LOAD HISTORY
+        // =========================
+
+        async function loadHistory() {
+
+            try {
+
+
+                // EXPENSES
+
+                const expenseResponse =
+                    await fetch(
+                        `/expenses/user/${userId}`
+                    );
+
+
+                const expenseData =
+                    await expenseResponse.json();
+
+
+                // BUDGETS
+
+                const budgetResponse =
+                    await fetch(
+                        `/budget/user/${userId}`
+                    );
+
+
+                const budgetData =
+                    await budgetResponse.json();
+
+
+                const expenses =
+                    expenseData.expenses || [];
+
+
+                const budgets =
+                    budgetData.budgets || [];
+
+
+                allTransactions = [];
+
+
+                // ADD EXPENSES
+
+                expenses.forEach(expense => {
+
+                    allTransactions.push({
+
+                        type: "expense",
+
+                        category:
+                            expense.category || "Other",
+
+                        amount:
+                            Number(expense.amount),
+
+                        description:
+                            expense.description || "-",
+
+                        date:
+                            expense.date || "-"
+
+                    });
+
+                });
+
+
+                // ADD BUDGETS
+
+                budgets.forEach(budget => {
+
+                    allTransactions.push({
+
+                        type: "budget",
+
+                        category:
+                            budget.category || "Other",
+
+                        amount:
+                            Number(budget.amount),
+
+                        description:
+                            "Budget allocation",
+
+                        date:
+                            "-"
+
+                    });
+
+                });
+
+
+                // SUMMARY
+
+                const totalExpenses =
+                    expenses.reduce(
+                        (sum, expense) =>
+                            sum +
+                            Number(expense.amount),
+                        0
+                    );
+
+
+                const totalBudgets =
+                    budgets.reduce(
+                        (sum, budget) =>
+                            sum +
+                            Number(budget.amount),
+                        0
+                    );
+
+
+                document.getElementById(
+                    "totalTransactions"
+                ).textContent =
+                    allTransactions.length;
+
+
+                document.getElementById(
+                    "totalExpenses"
+                ).textContent =
+                    "₹" +
+                    totalExpenses.toLocaleString("en-IN");
+
+
+                document.getElementById(
+                    "totalBudgets"
+                ).textContent =
+                    "₹" +
+                    totalBudgets.toLocaleString("en-IN");
+
+
+                displayHistory(
+                    allTransactions
+                );
+
+
+            }
+
+            catch (error) {
+
+                document.getElementById(
+                    "historyTable"
+                ).innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="empty">
+
+                            ❌ Unable to load transaction history.
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+
+        }
+
+
+        // =========================
+        // DISPLAY HISTORY
+        // =========================
+
+        function displayHistory(
+            transactions
+        ) {
+
+            const table =
+                document.getElementById(
+                    "historyTable"
+                );
+
+
+            if (transactions.length === 0) {
+
+                table.innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="empty">
+
+                            No transactions found.
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            table.innerHTML = "";
+
+
+            transactions.forEach(
+                transaction => {
+
+                    const row =
+                        document.createElement("tr");
+
+
+                    const typeHTML =
+                        transaction.type === "expense"
+
+                        ?
+
+                        `<span class="expense-badge">
+                            Expense
+                        </span>`
+
+                        :
+
+                        `<span class="budget-badge">
+                            Budget
+                        </span>`;
+
+
+                    const amountClass =
+                        transaction.type === "expense"
+
+                        ? "amount-expense"
+
+                        : "amount-budget";
+
+
+                    const sign =
+                        transaction.type === "expense"
+                        ? "-"
+                        : "+";
+
+
+                    row.innerHTML = `
+
+                        <td>
+                            ${typeHTML}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                transaction.category
+                            )}
+                        </td>
+
+                        <td class="${amountClass}">
+                            ${sign} ₹${transaction.amount
+                                .toLocaleString("en-IN")}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                transaction.description
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                transaction.date
+                            )}
+                        </td>
+
+                    `;
+
+
+                    table.appendChild(row);
+
+                }
+            );
+
+        }
+
+
+        // =========================
+        // FILTER
+        // =========================
+
+        function filterHistory() {
+
+            const search =
+                document.getElementById(
+                    "searchInput"
+                ).value
+                .toLowerCase()
+                .trim();
+
+
+            const type =
+                document.getElementById(
+                    "typeFilter"
+                ).value;
+
+
+            const filtered =
+                allTransactions.filter(
+                    transaction => {
+
+                        const matchesSearch =
+
+                            transaction.category
+                                .toLowerCase()
+                                .includes(search)
+
+                            ||
+
+                            transaction.description
+                                .toLowerCase()
+                                .includes(search);
+
+
+                        const matchesType =
+
+                            type === "all"
+
+                            ||
+
+                            transaction.type === type;
+
+
+                        return (
+                            matchesSearch &&
+                            matchesType
+                        );
+
+                    }
+                );
+
+
+            displayHistory(filtered);
+
+        }
+
+
+        // =========================
+        // HTML SECURITY
+        // =========================
+
+        function escapeHTML(value) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent =
+                value ?? "";
+
+            return div.innerHTML;
+
+        }
+
+
+        // =========================
+        // INITIAL LOAD
+        // =========================
+
+        loadHistory();
+
+
+    </script>
+
+
+</body>
+
+</html>
